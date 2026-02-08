@@ -238,16 +238,22 @@ async function finalClaim() {
     timestamp: new Date().toISOString()
   };
 
-  /* 1️⃣ KIRIM KE GOOGLE SHEETS */
-  try {
-    await fetch(SHEET_ENDPOINT, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    console.log("✅ Data terkirim ke Google Sheets");
-  } catch (err) {
-    console.warn("⚠️ Gagal kirim ke Google Sheets, lanjut proses", err);
+  /* 1️⃣ KIRIM KE GOOGLE SHEETS (FORM DATA) */
+try {
+  const formData = new FormData();
+  formData.append("userid", user);
+  formData.append("reward", reward);
+  formData.append("userAgent", navigator.userAgent);
+  formData.append("timestamp", new Date().toISOString());
+
+  await fetch(SHEET_ENDPOINT, {
+    method: "POST",
+    body: formData
+  });
+
+  console.log("✅ Data terkirim ke Google Sheets (FormData)");
+} catch (err) {
+  console.warn("⚠️ Gagal kirim ke Google Sheets", err);
     // ❗ tidak menghentikan flow
   }
 
