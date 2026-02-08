@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ANGPAO EVENT</title>
+
+<!-- html2canvas -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+/* =====================
+   GLOBAL THEME (RED & GOLD ONLY)
+===================== */
+:root {
+  --red-dark: #B11226;
+  --red-bright: #C4001A;
+  --gold-main: #FFD700;
+  --gold-soft: #F5C542;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, sans-serif;
+  background: radial-gradient(circle at top, var(--red-bright), var(--red-dark));
+  color: var(--gold-main);
+  min-height: 100vh;
+}
+
+#app {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* =====================
+   CARD
+===================== */
+.card {
+  background: linear-gradient(180deg, var(--red-bright), var(--red-dark));
+  border: 4px solid var(--gold-main);
+  border-radius: 22px;
+  padding: 30px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 0 45px rgba(255,215,0,.45);
+  animation: fadeIn .6s ease;
+}
+
+h1, h2 {
+  margin: 0 0 10px;
+  text-shadow: 0 0 14px rgba(255,215,0,.85);
+}
+
+.subtitle {
+  margin-bottom: 26px;
+  font-size: 1.1rem;
+}
+
+/* =====================
+   BUTTON
+===================== */
+button {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: none;
+  background: linear-gradient(180deg, var(--gold-main), var(--gold-soft));
+  color: var(--red-dark);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 0 22px rgba(255,215,0,.8);
+  transition: transform .2s, box-shadow .2s;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(255,215,0,1);
+}
+
+/* =====================
+   INPUT
+===================== */
+input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 2px solid var(--gold-main);
+  background: transparent;
+  color: var(--gold-main);
+  font-size: 1rem;
+  outline: none;
+  box-shadow: 0 0 18px rgba(255,215,0,.5);
+}
+
+input::placeholder {
+  color: rgba(255,215,0,.6);
+}
+
+/* =====================
+   ANGPAO GRID
+===================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-top: 16px;
+}
+
+.box {
+  background: linear-gradient(180deg, var(--gold-main), var(--gold-soft));
+  border-radius: 16px;
+  padding: 26px 0;
+  color: var(--red-dark);
+  font-size: 1.4rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 0 25px rgba(255,215,0,.8);
+  transition: transform .2s;
+}
+
+.box:hover {
+  transform: scale(1.05);
+}
+
+.box.locked {
+  opacity: .35;
+  pointer-events: none;
+}
+
+/* =====================
+   REWARD
+===================== */
+.reward {
+  font-size: 2.6rem;
+  margin: 22px 0;
+  animation: glow 1.5s infinite alternate;
+}
+
+/* =====================
+   ANIMATIONS
+===================== */
+@keyframes glow {
+  from { text-shadow: 0 0 12px rgba(255,215,0,.6); }
+  to   { text-shadow: 0 0 35px rgba(255,215,0,1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+
+<body>
+<div id="app"></div>
+
+<script>
+/* =====================
+   CONFIG (EDITABLE)
+===================== */
+const REDIRECT_URL = "https://yourlink.com";
+
+/* =====================
+   STATE & STORAGE
+===================== */
+const app = document.getElementById("app");
+const claimedUsers = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
+
+let selectedBox = null;
+let rewardAmount = null;
+
+/* =====================
+   UTIL
+===================== */
+function rupiah(num) {
+  return "Rp " + num.toLocaleString("id-ID");
+}
+
+/* =====================
+   PAGE 1 – LANDING
+===================== */
+function landingPage() {
+  app.innerHTML = `
+    <div class="card">
+      <h2>AJAIB4D</h2>
+      <h1>ANGPAO</h1>
+      <div class="subtitle">🧧 Gong Xi Fa Cai 🧧</div>
+      <button onclick="inputPage()">AMBIL ANGPAO</button>
+    </div>
+  `;
+}
+
+/* =====================
+   PAGE 2 – USER INPUT
+===================== */
+function inputPage() {
+  app.innerHTML = `
+    <div class="card">
+      <h1>MASUKKAN USERID/USERNAME</h1>
+      <p>untuk mengeclaim angpao</p>
+      <input id="userid" placeholder="Contoh: user_***88">
+      <br><br>
+      <button onclick="handleUser()">🧧 CLAIM</button>
+    </div>
+  `;
+}
+
+function handleUser() {
+  const user = document.getElementById("userid").value.trim();
+  if (!user) return alert("User ID wajib diisi");
+  if (claimedUsers[user]) return alert("User ini sudah pernah claim");
+
+  sessionStorage.setItem("currentUser", user);
+  boxPage();
+}
+
+/* =====================
+   PAGE 3 – BOX SELECTION
+===================== */
+function boxPage() {
+  selectedBox = null;
+  app.innerHTML = `
+    <div class="card">
+      <h1>🧧 ANGPAO 🧧</h1>
+      <div class="grid">
+        ${Array.from({length:9}).map((_,i)=>
+          `<div class="box" onclick="selectBox(${i}, this)">🧧</div>`
+        ).join("")}
+      </div>
+    </div>
+  `;
+}
+
+function selectBox(i, el) {
+  if (selectedBox !== null) return;
+  selectedBox = i;
+
+  document.querySelectorAll(".box").forEach(b => b.classList.add("locked"));
+  el.classList.remove("locked");
+
+  setTimeout(revealReward, 900);
+}
+
+/* =====================
+   PAGE 4 – REWARD REVEAL
+===================== */
+function revealReward() {
+  rewardAmount = Math.floor(Math.random() * 500001) + 500000;
+  finalPage();
+}
+
+/* =====================
+   PAGE 5 – FINAL CLAIM
+===================== */
+function finalPage() {
+  const user = sessionStorage.getItem("currentUser");
+
+  app.innerHTML = `
+    <div class="card" id="claimCard">
+      <h2>User ID: ${user}</h2>
+      <h1>SELAMAT!</h1>
+      <p>Anda mendapatkan:</p>
+      <div class="reward">${rupiah(rewardAmount)}</div>
+      <button onclick="finalClaim()">🧧 CLAIM ANGPAO KAMU</button>
+      <br><br>
+      <button onclick="landingPage()">Kembali ke Halaman Utama</button>
+    </div>
+  `;
+}
+
+/* =====================
+   FINAL CLAIM FLOW (STRICT)
+===================== */
+function finalClaim() {
+  const user = sessionStorage.getItem("currentUser");
+
+  // Save ONLY here
+  claimedUsers[user] = {
+    claimed: true,
+    reward: rewardAmount,
+    timestamp: Date.now()
+  };
+  localStorage.setItem("claimedUsers", JSON.stringify(claimedUsers));
+
+  const card = document.getElementById("claimCard");
+
+  html2canvas(card).then(canvas => {
+    const link = document.createElement("a");
+    link.download = `angpao-claim_${user}_${Date.now()}.png`;
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    setTimeout(() => {
+      window.location.href = REDIRECT_URL;
+    }, 900);
+  });
+}
+
+/* =====================
+   INIT
+===================== */
+landingPage();
+</script>
+</body>
+</html>
