@@ -9,9 +9,6 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
 <style>
-/* ===============================
-   GLOBAL THEME – RED & GOLD ONLY
-================================ */
 :root {
   --red-dark: #B11226;
   --red-light: #C4001A;
@@ -19,10 +16,7 @@
   --gold-soft: #F5C542;
 }
 
-* {
-  box-sizing: border-box;
-  font-family: "Segoe UI", sans-serif;
-}
+* { box-sizing: border-box; font-family: "Segoe UI", sans-serif; }
 
 body {
   margin: 0;
@@ -43,21 +37,13 @@ body {
   text-align: center;
 }
 
-/* ===============================
-   TEXT & EFFECTS
-================================ */
-h1, h2, h3 {
+h1,h2,h3 {
   margin: 10px 0;
-  text-shadow: 0 0 10px rgba(255,215,0,0.6);
+  text-shadow: 0 0 10px rgba(255,215,0,.6);
 }
 
-.glow {
-  text-shadow: 0 0 15px rgba(255,215,0,0.9);
-}
+.glow { text-shadow: 0 0 15px rgba(255,215,0,.9); }
 
-/* ===============================
-   BUTTONS
-================================ */
 button {
   background: linear-gradient(145deg, var(--gold-main), var(--gold-soft));
   color: var(--red-dark);
@@ -67,18 +53,11 @@ button {
   font-size: 16px;
   cursor: pointer;
   margin-top: 15px;
-  box-shadow: 0 0 15px rgba(255,215,0,0.7);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 15px rgba(255,215,0,.7);
+  transition: .2s;
 }
+button:hover { transform: scale(1.05); box-shadow: 0 0 25px rgba(255,215,0,1); }
 
-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 25px rgba(255,215,0,1);
-}
-
-/* ===============================
-   INPUT
-================================ */
 input {
   width: 100%;
   padding: 14px;
@@ -89,12 +68,9 @@ input {
   font-size: 16px;
   text-align: center;
   outline: none;
-  box-shadow: 0 0 10px rgba(255,215,0,0.6);
+  box-shadow: 0 0 10px rgba(255,215,0,.6);
 }
 
-/* ===============================
-   ANGPAO BOX GRID
-================================ */
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -106,21 +82,17 @@ input {
   height: 90px;
   background: linear-gradient(145deg, var(--gold-main), var(--gold-soft));
   border-radius: 15px;
-  box-shadow: 0 0 15px rgba(255,215,0,0.8);
+  box-shadow: 0 0 15px rgba(255,215,0,.8);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 30px;
   cursor: pointer;
-  transition: transform 0.2s;
+  transition: .2s;
 }
-
 .box:hover { transform: scale(1.08); }
-.box.locked { opacity: 0.4; pointer-events: none; }
+.box.locked { opacity: .4; pointer-events: none; }
 
-/* ===============================
-   REVEAL ANIMATION
-================================ */
 #angpao {
   width: 180px;
   height: 120px;
@@ -128,41 +100,16 @@ input {
   background: linear-gradient(180deg, var(--red-light), var(--red-dark));
   border: 4px solid var(--gold-main);
   border-radius: 10px;
-  position: relative;
   animation: open 2s ease forwards;
 }
+@keyframes open { from {transform:scale(.8);} to {transform:scale(1);} }
 
-@keyframes open {
-  0% { transform: scale(0.8); }
-  100% { transform: scale(1); }
-}
-
-/* ===============================
-   FINAL CARD
-================================ */
 #finalCard {
   background: linear-gradient(180deg, var(--red-light), var(--red-dark));
   border: 4px solid var(--gold-main);
   border-radius: 20px;
   padding: 25px;
-  box-shadow: 0 0 30px rgba(255,215,0,0.9);
-}
-
-/* ===============================
-   PARTICLES
-================================ */
-.particle {
-  position: absolute;
-  width: 6px;
-  height: 6px;
-  background: var(--gold-main);
-  border-radius: 50%;
-  animation: float 6s linear infinite;
-}
-
-@keyframes float {
-  from { transform: translateY(0); opacity: 1; }
-  to { transform: translateY(-600px); opacity: 0; }
+  box-shadow: 0 0 30px rgba(255,215,0,.9);
 }
 </style>
 </head>
@@ -181,7 +128,7 @@ input {
 <div class="page hidden" id="page2">
   <h2>MASUKKAN USERID / USERNAME</h2>
   <p>untuk mengeclaim angpao</p>
-  <input id="userid" placeholder="Contoh: user_***88"/>
+  <input id="userid" placeholder="Contoh: user_***88">
   <button onclick="submitUser()">🧧 CLAIM</button>
 </div>
 
@@ -222,10 +169,9 @@ input {
 <script>
 /* ===============================
    CONFIG
-======================= */
-
-const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzxUHsMmfc4n9Fm1AOxRbsFmUJz4JtHeK1iNzh0vqLJfPkqFsjks47DWmKKDoFJNCuoOw/exec";
-const REDIRECT_URL   = "https://two.ajaibraih.com/";
+================================ */
+const REDIRECT_URL = "https://two.ajaibraih.com/";
+const SHEET_ENDPOINT = "https://script.google.com/macros/s/XXXX/exec";
 
 /* ===============================
    STATE
@@ -238,14 +184,14 @@ let user = "";
 ================================ */
 function goPage(n) {
   document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
-  document.getElementById("page" + n).classList.remove("hidden");
+  document.getElementById("page"+n).classList.remove("hidden");
 }
 
 /* ===============================
    USER INPUT
 ================================ */
 function submitUser() {
-  const val = document.getElementById("userid").value.trim();
+  const val = userid.value.trim();
   if (!val) return alert("User ID wajib diisi");
   const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
   if (claimed[val]) return alert("User ini sudah pernah claim!");
@@ -255,7 +201,7 @@ function submitUser() {
 }
 
 /* ===============================
-   BOX SELECTION
+   BOX
 ================================ */
 function selectBox(el) {
   document.querySelectorAll(".box").forEach(b => b.classList.add("locked"));
@@ -264,24 +210,21 @@ function selectBox(el) {
 }
 
 /* ===============================
-   REWARD LOGIC
+   REWARD
 ================================ */
 function showReward() {
   reward = Math.floor(Math.random() * 500001) + 500000;
   goPage(4);
   setTimeout(() => {
-    document.getElementById("finalUser").innerText = "User ID: " + user;
-    document.getElementById("finalReward").innerText =
-      "Rp " + reward.toLocaleString("id-ID");
+    finalUser.innerText = "User ID: " + user;
+    finalReward.innerText = "Rp " + reward.toLocaleString("id-ID");
     goPage(5);
   }, 2000);
 }
 
 /* ===============================
-   FINAL CLAIM
+   FINAL CLAIM (GOOGLE SHEET)
 ================================ */
-function finalClaim() {
-  <script>
 async function finalClaim() {
 
   const payload = {
@@ -292,47 +235,23 @@ async function finalClaim() {
   };
 
   try {
-    // ===============================
-    // 1️⃣ KIRIM KE GOOGLE SHEETS
-    // ===============================
     await fetch(SHEET_ENDPOINT, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
 
-    console.log("✅ Data terkirim ke Google Sheets");
-
-    // ===============================
-    // 2️⃣ SIMPAN KE LOCAL STORAGE
-    // ===============================
     const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
-    claimed[user] = {
-      claimed: true,
-      reward: reward,
-      timestamp: Date.now()
-    };
+    claimed[user] = { claimed:true, reward, timestamp:Date.now() };
     localStorage.setItem("claimedUsers", JSON.stringify(claimed));
 
-    // ===============================
-    // 3️⃣ SCREENSHOT FINAL CARD
-    // ===============================
-    const card = document.getElementById("finalCard");
-    const canvas = await html2canvas(card);
-
+    const canvas = await html2canvas(document.getElementById("finalCard"));
     const link = document.createElement("a");
     link.download = `angpao-claim_${user}_${Date.now()}.png`;
     link.href = canvas.toDataURL("image/png");
     link.click();
 
-    // ===============================
-    // 4️⃣ REDIRECT
-    // ===============================
-    setTimeout(() => {
-      window.location.href = REDIRECT_URL;
-    }, 1200);
+    setTimeout(() => window.location.href = REDIRECT_URL, 1200);
 
   } catch (err) {
     console.error("❌ Gagal kirim ke Google Sheet", err);
@@ -340,3 +259,6 @@ async function finalClaim() {
   }
 }
 </script>
+
+</body>
+</html>
