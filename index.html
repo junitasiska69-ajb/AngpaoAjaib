@@ -281,25 +281,62 @@ function showReward() {
    FINAL CLAIM
 ================================ */
 function finalClaim() {
-  const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
-  claimed[user] = {
-    claimed: true,
-    reward: reward,
-    timestamp: Date.now()
-  };
-  localStorage.setItem("claimedUsers", JSON.stringify(claimed));
+  <script>
+async function finalClaim() {
 
-  html2canvas(document.getElementById("finalCard")).then(canvas => {
+  const payload = {
+    userid: user,
+    reward: reward,
+    userAgent: navigator.userAgent,
+    timestamp: new Date().toISOString()
+  };
+
+  try {
+    // ===============================
+    // 1️⃣ KIRIM KE GOOGLE SHEETS
+    // ===============================
+    await fetch(SHEET_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    console.log("✅ Data terkirim ke Google Sheets");
+
+    // ===============================
+    // 2️⃣ SIMPAN KE LOCAL STORAGE
+    // ===============================
+    const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
+    claimed[user] = {
+      claimed: true,
+      reward: reward,
+      timestamp: Date.now()
+    };
+    localStorage.setItem("claimedUsers", JSON.stringify(claimed));
+
+    // ===============================
+    // 3️⃣ SCREENSHOT FINAL CARD
+    // ===============================
+    const card = document.getElementById("finalCard");
+    const canvas = await html2canvas(card);
+
     const link = document.createElement("a");
     link.download = `angpao-claim_${user}_${Date.now()}.png`;
-    link.href = canvas.toDataURL();
+    link.href = canvas.toDataURL("image/png");
     link.click();
+
+    // ===============================
+    // 4️⃣ REDIRECT
+    // ===============================
     setTimeout(() => {
       window.location.href = REDIRECT_URL;
-    }, 800);
-  });
+    }, 1200);
+
+  } catch (err) {
+    console.error("❌ Gagal kirim ke Google Sheet", err);
+    alert("Terjadi kesalahan saat menyimpan data");
+  }
 }
 </script>
-
-</body>
-</html>
