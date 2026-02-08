@@ -280,20 +280,33 @@ async function finalClaim() {
   };
   localStorage.setItem("claimedUsers", JSON.stringify(claimed));
 
-  /* 3️⃣ SCREENSHOT (FIXED TIMING) */
-  const card = document.getElementById("finalCard");
-  await new Promise(r => setTimeout(r, 400));
+  /* 3️⃣ SCREENSHOT FINAL CARD (HARD FIX) */
+const card = document.getElementById("finalCard");
+const page = document.getElementById("page5");
 
-  const canvas = await html2canvas(card, {
-    scale: window.devicePixelRatio || 2,
-    useCORS: true,
-    backgroundColor: null
-  });
+/* 🔥 FORCE NORMAL LAYOUT */
+page.style.display = "block";
+page.style.alignItems = "initial";
+page.style.justifyContent = "initial";
 
-  const link = document.createElement("a");
-  link.download = `angpao-claim_${user}_${Date.now()}.png`;
-  link.href = canvas.toDataURL("image/png");
-  link.click();
+/* tunggu repaint */
+await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
+
+const canvas = await html2canvas(card, {
+  scale: 2,
+  useCORS: true,
+  backgroundColor: null
+});
+
+/* restore (optional, aman) */
+page.style.display = "";
+page.style.alignItems = "";
+page.style.justifyContent = "";
+
+const link = document.createElement("a");
+link.download = `angpao-claim_${user}_${Date.now()}.png`;
+link.href = canvas.toDataURL("image/png");
+link.click();
 
   /* 4️⃣ REDIRECT */
   setTimeout(() => {
