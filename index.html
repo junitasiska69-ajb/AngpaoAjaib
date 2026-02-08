@@ -184,24 +184,26 @@ let user = "";
 ================================ */
 function goPage(n) {
   document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
-  document.getElementById("page"+n).classList.remove("hidden");
+  document.getElementById("page" + n).classList.remove("hidden");
 }
 
 /* ===============================
    USER INPUT
 ================================ */
 function submitUser() {
-  const val = userid.value.trim();
+  const val = document.getElementById("userid").value.trim();
   if (!val) return alert("User ID wajib diisi");
+
   const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
   if (claimed[val]) return alert("User ini sudah pernah claim!");
+
   sessionStorage.setItem("user", val);
   user = val;
   goPage(3);
 }
 
 /* ===============================
-   BOX
+   BOX SELECTION
 ================================ */
 function selectBox(el) {
   document.querySelectorAll(".box").forEach(b => b.classList.add("locked"));
@@ -210,20 +212,22 @@ function selectBox(el) {
 }
 
 /* ===============================
-   REWARD
+   REWARD LOGIC
 ================================ */
 function showReward() {
   reward = Math.floor(Math.random() * 500001) + 500000;
   goPage(4);
+
   setTimeout(() => {
-    finalUser.innerText = "User ID: " + user;
-    finalReward.innerText = "Rp " + reward.toLocaleString("id-ID");
+    document.getElementById("finalUser").innerText = "User ID: " + user;
+    document.getElementById("finalReward").innerText =
+      "Rp " + reward.toLocaleString("id-ID");
     goPage(5);
   }, 2000);
 }
 
 /* ===============================
-   FINAL CLAIM (GOOGLE SHEET)
+   FINAL CLAIM (WITH GOOGLE SHEETS)
 ================================ */
 async function finalClaim() {
 
@@ -234,29 +238,41 @@ async function finalClaim() {
     timestamp: new Date().toISOString()
   };
 
+  /* 1️⃣ KIRIM KE GOOGLE SHEETS */
   try {
     await fetch(SHEET_ENDPOINT, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     });
-
-    const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
-    claimed[user] = { claimed:true, reward, timestamp:Date.now() };
-    localStorage.setItem("claimedUsers", JSON.stringify(claimed));
-
-    const canvas = await html2canvas(document.getElementById("finalCard"));
-    const link = document.createElement("a");
-    link.download = `angpao-claim_${user}_${Date.now()}.png`;
-    link.href = canvas.toDataURL("image/png");
-    link.click();
-
-    setTimeout(() => window.location.href = REDIRECT_URL, 1200);
-
+    console.log("✅ Data terkirim ke Google Sheets");
   } catch (err) {
-    console.error("❌ Gagal kirim ke Google Sheet", err);
-    alert("Terjadi kesalahan saat menyimpan data");
+    console.warn("⚠️ Gagal kirim ke Google Sheets, lanjut proses", err);
+    // ❗ tidak menghentikan flow
   }
+
+  /* 2️⃣ SIMPAN KE LOCAL STORAGE */
+  const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
+  claimed[user] = {
+    claimed: true,
+    reward: reward,
+    timestamp: Date.now()
+  };
+  localStorage.setItem("claimedUsers", JSON.stringify(claimed));
+
+  /* 3️⃣ SCREENSHOT FINAL CARD */
+  const card = document.getElementById("finalCard");
+  const canvas = await html2canvas(card);
+
+  const link = document.createElement("a");
+  link.download = `angpao-claim_${user}_${Date.now()}.png`;
+  link.href = canvas.toDataURL("image/png");
+  link.click();
+
+  /* 4️⃣ REDIRECT */
+  setTimeout(() => {
+    window.location.href = REDIRECT_URL;
+  }, 800);
 }
 </script>
 
