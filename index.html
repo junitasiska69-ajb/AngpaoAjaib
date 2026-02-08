@@ -26,22 +26,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow-x: hidden;
 }
-
-/* Garis altar kiri kanan */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  top: 0;
-  width: 6px;
-  height: 100%;
-  background: linear-gradient(180deg, transparent, var(--gold-main), transparent);
-  opacity: .6;
-}
-body::before { left: 12px; }
-body::after { right: 12px; }
 
 .hidden { display: none; }
 
@@ -53,12 +38,28 @@ body::after { right: 12px; }
   position: relative;
 }
 
+/* ORNAMENT LINES */
+.page::before,
+.page::after {
+  content: "";
+  position: absolute;
+  top: 30px;
+  bottom: 30px;
+  width: 2px;
+  background: linear-gradient(180deg, transparent, var(--gold-main), transparent);
+  opacity: .6;
+}
+.page::before { left: 10px; }
+.page::after { right: 10px; }
+
 h1,h2,h3 {
   margin: 10px 0;
   text-shadow: 0 0 12px rgba(255,215,0,.7);
 }
 
-.glow { text-shadow: 0 0 18px rgba(255,215,0,1); }
+.glow {
+  text-shadow: 0 0 18px rgba(255,215,0,1);
+}
 
 button {
   background: linear-gradient(145deg, var(--gold-main), var(--gold-soft));
@@ -69,10 +70,13 @@ button {
   font-size: 16px;
   cursor: pointer;
   margin-top: 15px;
-  box-shadow: 0 0 18px rgba(255,215,0,.8);
+  box-shadow: 0 0 18px rgba(255,215,0,.9);
   transition: .2s;
 }
-button:hover { transform: scale(1.06); box-shadow: 0 0 28px rgba(255,215,0,1); }
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255,215,0,1);
+}
 
 input {
   width: 100%;
@@ -84,121 +88,63 @@ input {
   font-size: 16px;
   text-align: center;
   outline: none;
-  box-shadow: 0 0 12px rgba(255,215,0,.6);
+  box-shadow: 0 0 12px rgba(255,215,0,.7);
 }
 
 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 15px;
-  margin-top: 20px;
+  margin-top: 25px;
 }
 
 .box {
   height: 90px;
   background: linear-gradient(145deg, var(--gold-main), var(--gold-soft));
-  border-radius: 15px;
-  box-shadow: 0 0 18px rgba(255,215,0,.9);
+  border-radius: 18px;
+  box-shadow: 0 0 20px rgba(255,215,0,.9);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 32px;
+  font-size: 30px;
   cursor: pointer;
   transition: .2s;
 }
 .box:hover { transform: scale(1.1); }
 .box.locked { opacity: .35; pointer-events: none; }
 
-/* Angpao buka */
 #angpao {
-  width: 190px;
-  height: 120px;
+  width: 200px;
+  height: 130px;
   margin: 30px auto;
   background: linear-gradient(180deg, var(--red-light), var(--red-dark));
   border: 4px solid var(--gold-main);
-  border-radius: 10px;
-  box-shadow: 0 0 25px gold;
+  border-radius: 12px;
+  box-shadow: 0 0 25px rgba(255,215,0,.8);
   animation: open 2s ease forwards;
 }
 @keyframes open {
-  from { transform: scale(.8); }
-  to { transform: scale(1); }
+  from { transform: scale(.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
 
 #finalCard {
   background: linear-gradient(180deg, var(--red-light), var(--red-dark));
   border: 4px solid var(--gold-main);
   border-radius: 22px;
-  padding: 25px;
+  padding: 28px;
   box-shadow: 0 0 35px rgba(255,215,0,1);
-}
-
-/* Ornamen tambahan */
-.big-angpao {
-  font-size: 90px;
-  filter: drop-shadow(0 0 25px gold);
-  animation: float 3s ease-in-out infinite;
-}
-@keyframes float {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(-14px); }
-}
-
-.lantern {
-  font-size: 26px;
-  margin: 0 6px;
-  animation: sway 2.5s ease-in-out infinite;
-}
-@keyframes sway {
-  0%,100% { transform: rotate(0deg); }
-  50% { transform: rotate(6deg); }
-}
-
-.badge {
-  font-size: 12px;
-  padding: 6px 14px;
-  border: 1px solid gold;
-  border-radius: 20px;
-  display: inline-block;
-  margin-top: 12px;
-  box-shadow: 0 0 10px gold;
-}
-
-/* Naga */
-.dragon {
-  position: fixed;
-  top: 18%;
-  font-size: 80px;
-  opacity: .15;
-  animation: dragonMove 22s linear infinite;
-}
-@keyframes dragonMove {
-  from { transform: translateX(-150px); }
-  to { transform: translateX(110vw); }
-}
-
-/* Confetti */
-@keyframes fall {
-  to { transform: translateY(110vh); opacity: 0; }
 }
 </style>
 </head>
 
 <body>
 
-<div class="dragon">🐉</div>
-
-<audio id="clickSound">
-  <source src="https://assets.mixkit.co/sfx/preview/mixkit-coins-handling-1939.mp3" type="audio/mpeg">
-</audio>
-
 <!-- PAGE 1 -->
 <div class="page" id="page1">
   <h3>AJAIB4D</h3>
   <h1 class="glow">ANGPAO</h1>
-  <div class="big-angpao">🧧</div>
   <h3>🧧 Gong Xi Fa Cai 🧧</h3>
-  <div class="badge">🔒 EVENT RESMI • 1 USER 1 CLAIM</div>
   <button onclick="goPage(2)">AMBIL ANGPAO</button>
 </div>
 
@@ -212,11 +158,7 @@ input {
 
 <!-- PAGE 3 -->
 <div class="page hidden" id="page3">
-  <h2>
-    <span class="lantern">🏮</span>
-    🧧 ANGPAO 🧧
-    <span class="lantern">🏮</span>
-  </h2>
+  <h2>🧧 ANGPAO 🧧</h2>
   <div class="grid">
     <div class="box" onclick="selectBox(this)">🧧</div>
     <div class="box" onclick="selectBox(this)">🧧</div>
@@ -240,7 +182,7 @@ input {
 <div class="page hidden" id="page5">
   <div id="finalCard">
     <h3 id="finalUser"></h3>
-    <h2>SELAMAT!</h2>
+    <h2 class="glow">SELAMAT!</h2>
     <p>Anda mendapatkan:</p>
     <h1 id="finalReward" class="glow"></h1>
   </div>
@@ -249,21 +191,29 @@ input {
 </div>
 
 <script>
-/* CONFIG */
+/* ===============================
+   CONFIG
+================================ */
 const REDIRECT_URL = "https://two.ajaibraih.com/";
 const SHEET_ENDPOINT = "https://script.google.com/macros/s/AKfycbzxUHsMmfc4n9Fm1AOxRbsFmUJz4JtHeK1iNzh0vqLJfPkqFsjks47DWmKKDoFJNCuoOw/exec";
 
-/* STATE */
+/* ===============================
+   STATE
+================================ */
 let reward = 0;
 let user = "";
 
-/* NAV */
+/* ===============================
+   NAVIGATION
+================================ */
 function goPage(n) {
   document.querySelectorAll(".page").forEach(p => p.classList.add("hidden"));
   document.getElementById("page" + n).classList.remove("hidden");
 }
 
-/* USER */
+/* ===============================
+   USER INPUT
+================================ */
 function submitUser() {
   const val = document.getElementById("userid").value.trim();
   if (!val) return alert("User ID wajib diisi");
@@ -276,34 +226,18 @@ function submitUser() {
   goPage(3);
 }
 
-/* BOX */
+/* ===============================
+   BOX SELECTION
+================================ */
 function selectBox(el) {
-  document.getElementById("clickSound").play();
   document.querySelectorAll(".box").forEach(b => b.classList.add("locked"));
   el.classList.remove("locked");
   setTimeout(showReward, 800);
 }
 
-/* CONFETTI */
-function goldConfetti() {
-  for (let i = 0; i < 30; i++) {
-    const c = document.createElement("div");
-    c.style.position = "fixed";
-    c.style.top = "-10px";
-    c.style.left = Math.random() * 100 + "vw";
-    c.style.width = "6px";
-    c.style.height = "6px";
-    c.style.background = "gold";
-    c.style.opacity = .9;
-    c.style.borderRadius = "50%";
-    c.style.zIndex = 9999;
-    c.style.animation = "fall 2s linear forwards";
-    document.body.appendChild(c);
-    setTimeout(() => c.remove(), 2000);
-  }
-}
-
-/* REWARD */
+/* ===============================
+   REWARD LOGIC
+================================ */
 function showReward() {
   reward = Math.floor(Math.random() * 500001) + 500000;
   goPage(4);
@@ -312,14 +246,16 @@ function showReward() {
     document.getElementById("finalUser").innerText = "User ID: " + user;
     document.getElementById("finalReward").innerText =
       "Rp " + reward.toLocaleString("id-ID");
-    goldConfetti();
     goPage(5);
   }, 2000);
 }
 
-/* FINAL CLAIM */
+/* ===============================
+   FINAL CLAIM
+================================ */
 async function finalClaim() {
 
+  /* 1️⃣ SEND TO GOOGLE SHEETS */
   try {
     const formData = new FormData();
     formData.append("userid", user);
@@ -332,20 +268,34 @@ async function finalClaim() {
       body: formData
     });
   } catch (err) {
-    console.warn("⚠️ Google Sheet tidak merespon", err);
+    console.warn("⚠️ Google Sheet gagal", err);
   }
 
+  /* 2️⃣ SAVE LOCAL CLAIM */
   const claimed = JSON.parse(localStorage.getItem("claimedUsers") || "{}");
-  claimed[user] = { claimed: true, reward, timestamp: Date.now() };
+  claimed[user] = {
+    claimed: true,
+    reward: reward,
+    timestamp: Date.now()
+  };
   localStorage.setItem("claimedUsers", JSON.stringify(claimed));
 
+  /* 3️⃣ SCREENSHOT (FIXED TIMING) */
   const card = document.getElementById("finalCard");
-  const canvas = await html2canvas(card);
+  await new Promise(r => setTimeout(r, 400));
+
+  const canvas = await html2canvas(card, {
+    scale: window.devicePixelRatio || 2,
+    useCORS: true,
+    backgroundColor: null
+  });
+
   const link = document.createElement("a");
   link.download = `angpao-claim_${user}_${Date.now()}.png`;
   link.href = canvas.toDataURL("image/png");
   link.click();
 
+  /* 4️⃣ REDIRECT */
   setTimeout(() => {
     window.location.href = REDIRECT_URL;
   }, 900);
